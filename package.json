@@ -1,5 +1,5 @@
 {
-  "name": "stripe-backend",
+  "name": "foody-stripe",
   "version": "1.0.0",
   "type": "module",
   "main": "server.js",
@@ -9,6 +9,6 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "stripe": "^16.0.0"
+    "stripe": "^16.2.0"
   }
 }
