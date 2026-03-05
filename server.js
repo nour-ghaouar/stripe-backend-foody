@@ -32,18 +32,13 @@ const stripe = new Stripe(secret || "sk_test_missing", {
   apiVersion: "2024-06-20",
 });
 
-/**
- * helper: convert amount to smallest unit
- * - TND: millimes => *1000
- * - EUR/USD: cents => *100
- */
+
 function toSmallestUnit(total, currency) {
   const n = Number(total);
   if (!Number.isFinite(n)) return 0;
 
-  const c = (currency || "tnd").toLowerCase();
-  const factor = c === "tnd" ? 1000 : 100;
-  return Math.round(n * factor);
+  const c = (currency || "eur").toLowerCase();
+  const factor = 100;
 }
 
 /**
@@ -52,17 +47,7 @@ function toSmallestUnit(total, currency) {
 app.get("/", (req, res) => res.status(200).send("OK"));
 app.get("/health", (req, res) => res.status(200).json({ ok: true }));
 
-/**
- * ✅ POST /create-checkout-session
- * Body attendu (FlutterFlow):
- * {
- *   "orderId": "...",
- *   "total": 230.2,
- *   "currency": "tnd",
- *   "successUrl": "https://.../success",
- *   "cancelUrl": "https://.../cancel"
- * }
- */
+
 app.post("/create-checkout-session", async (req, res) => {
   try {
     const { orderId, total, currency, successUrl, cancelUrl } = req.body || {};
@@ -75,7 +60,7 @@ app.post("/create-checkout-session", async (req, res) => {
       return res.status(400).json({ error: "Missing orderId/successUrl/cancelUrl" });
     }
 
-    const cur = (currency || "tnd").toLowerCase();
+    const cur = (currency || "eur").toLowerCase();
     const amount = toSmallestUnit(total, cur);
     if (amount <= 0) {
       return res.status(400).json({ error: "Invalid total" });
