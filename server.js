@@ -65,7 +65,7 @@ app.post("/create-checkout-session", async (req, res) => {
         }
       ],
       metadata: { orderId },
-      success_url: `${successUrl}?session_id={CHECKOUT_SESSION_ID}&orderId=${encodeURIComponent(orderId)}`,
+      success_url: `${successUrl}?sessionId={CHECKOUT_SESSION_ID}&orderId=${encodeURIComponent(orderId)}`,
       cancel_url: `${cancelUrl}?orderId=${encodeURIComponent(orderId)}`
     });
 
@@ -82,10 +82,10 @@ app.post("/create-checkout-session", async (req, res) => {
 // GET /verify-session?session_id=...
 app.get("/verify-session", async (req, res) => {
   try {
-    const { session_id } = req.query;
-    if (!session_id) return res.status(400).json({ error: "Missing session_id" });
+    const { sessionId } = req.query;
+    if (!sessionId) return res.status(400).json({ error: "Missing sessionId" });
 
-    const session = await stripe.checkout.sessions.retrieve(session_id);
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     return res.json({
       payment_status: session.payment_status, // paid/unpaid
